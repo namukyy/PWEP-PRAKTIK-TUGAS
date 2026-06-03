@@ -1,0 +1,34 @@
+<?php
+session_start();
+if (!isset($_SESSION["login"])) { header("Location: login.php"); exit; }
+$page_title = 'Reading Comprehension';
+$base_path  = '../';
+require_once '../includes/header.php';
+
+$modul_list = [
+  ['judul' => 'Modul 1', 'topik' => 'Understanding Main Idea',       'link' => 'https://drive.google.com/file/d/1YcB6IJHgfiCxUwvv31CBgnBR8qX85G2s/view?usp=drive_link'],
+  ['judul' => 'Modul 2', 'topik' => 'Inference and Implication',     'link' => 'https://drive.google.com/file/d/1b4nm7RWz2fAmwukQ233fNPyQNVupbek4/view?usp=drive_link'],
+  ['judul' => 'Modul 3', 'topik' => 'Vocabulary in Context',         'link' => 'https://drive.google.com/file/d/1O4oKUxlmoUAA1euGPAQr62zbkn8G1b-p/view?usp=sharing'],
+  ['judul' => 'Modul 4', 'topik' => 'Text Organization',             'link' => 'https://drive.google.com/file/d/1TTd1zmKQP8wA11PbebItzxavB6q49far/view?usp=sharing'],
+  ['judul' => 'Modul 5', 'topik' => 'UTBK English Practice',         'link' => 'https://drive.google.com/file/d/1-vb4C1ycSxzRlgA9Kx5r5SFok0nh-TQj/view?usp=sharing'],
+];
+?>
+<main>
+  <div class="materi-header">
+    <h1>🌍 Reading Comprehension</h1>
+    <p>Master English reading skills for UTBK – from understanding main ideas and inferences to vocabulary in context and text organization strategies.</p>
+  </div>
+  <div class="modul-grid">
+    <?php
+ foreach ($modul_list as $m): ?>
+    <div class="modul-card">
+      <h3>📖 <?= $m['judul'] ?></h3>
+      <p><?= htmlspecialchars($m['topik']) ?></p>
+      <a href="<?= $m['link'] ?>" target="_blank" class="btn-blue">Open Module</a>
+    </div>
+    <?php
+ endforeach; ?>
+  </div>
+</main>
+<?php
+ require_once '../includes/footer.php'; ?>
