@@ -109,6 +109,26 @@ require_once '../includes/header.php';
   </div>
 </div>
 
+<!-- Modal Review -->
+<div class="modal-overlay" id="modal-review" style="display:none">
+  <div class="modal-box" style="max-width: 640px; padding: 24px;">
+    <div class="modal-header">
+      <h3>🔍 Pembahasan Tryout</h3>
+      <button class="modal-close" onclick="tutupReview()">✕</button>
+    </div>
+    <div id="review-info" style="margin-bottom: 16px;">
+      <h4 id="review-judul-paket" style="font-size: 16px; font-weight: 700; color: var(--biru-tua);"></h4>
+    </div>
+    <div id="review-soal-list" style="display: flex; flex-direction: column; gap: 20px; max-height: 55vh; overflow-y: auto; padding-right: 8px;">
+      <!-- list of review questions will be injected here -->
+    </div>
+    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px;">
+      <button class="btn-outline-dark" onclick="tutupReview()">Tutup</button>
+      <button class="btn-primary" onclick="location.href='dashboard.php'">Ke Dashboard</button>
+    </div>
+  </div>
+</div>
+
 <script>
 var soalBank    = <?= json_encode($soal_bank) ?>;
 var tryoutList  = <?= json_encode(array_column($tryout_list,'judul')) ?>;
@@ -212,13 +232,76 @@ function selesaiTryout() {
         + '<div><div style="font-size:36px;font-weight:700;color:#28a745">'+benar+'/'+total+'</div><small>Benar</small></div>'
         + '<div><div style="font-size:36px;font-weight:700;color:#f59e0b">'+waktu+'</div><small>Menit</small></div>'
         + '</div>'
-        + '<p style="color:#888;font-size:13px">Hasil disimpan ke riwayatmu</p>',
+        + '<p style="color:#888;font-size:13px">Hasil disimpan ke riwayatmu</p>'
+        + '<button class="btn-blue" onclick="bukaReview()" style="margin-top:12px; width:100%; display:block; padding:10px 14px; border-radius:6px; font-weight:600; cursor:pointer; text-align:center">🔍 Lihat Pembahasan Soal</button>',
     icon: nilai>=60 ? 'success' : 'info',
     confirmButtonText: 'Lihat Dashboard',
     showCancelButton: true,
     cancelButtonText: 'Tutup',
     confirmButtonColor: '#2563c7'
   }).then(function(r){ if(r.isConfirmed) location.href='dashboard.php'; });
+}
+
+function bukaReview() {
+  Swal.close();
+  var soal = soalBank[currentPaket];
+  var html = '';
+  var huruf = ['A', 'B', 'C', 'D'];
+  
+  document.getElementById('review-judul-paket').textContent = currentPaket;
+  
+  soal.forEach(function(s, i) {
+    var userJawab = jawaban[i];
+    var benarJawab = s.j;
+    
+    html += '<div style="border-bottom: 1.5px solid #eee; padding-bottom: 16px; margin-bottom: 12px;">';
+    html += '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">';
+    html += '    <span style="font-size: 12px; font-weight: 700; color: var(--biru); text-transform: uppercase;">Soal ' + (i + 1) + '</span>';
+    
+    if (userJawab === undefined) {
+      html += '    <span style="background: #fef3c7; color: #d97706; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px;">TIDAK DIJAWAB</span>';
+    } else if (userJawab === benarJawab) {
+      html += '    <span style="background: #d1e7dd; color: #0f5132; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px;">BENAR</span>';
+    } else {
+      html += '    <span style="background: #f8d7da; color: #842029; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px;">SALAH</span>';
+    }
+    
+    html += '  </div>';
+    html += '  <p style="font-size: 14px; font-weight: 600; color: #222; line-height: 1.5; margin-bottom: 12px;">' + escHtml(s.q) + '</p>';
+    html += '  <div style="display: flex; flex-direction: column; gap: 8px;">';
+    
+    s.a.forEach(function(opt, oIdx) {
+      var extraStyle = '';
+      var letterBg = '';
+      var icon = '';
+      
+      if (oIdx === benarJawab) {
+        extraStyle = 'border-color: #28a745; background: #f0fdf4; color: #166534; font-weight: 600;';
+        letterBg = 'background: #28a745; color: #fff;';
+        icon = ' <span style="color: #28a745; margin-left: auto; font-weight: bold;">✔ Kunci Jawaban</span>';
+      } else if (oIdx === userJawab) {
+        extraStyle = 'border-color: #dc3545; background: #fef2f2; color: #991b1b;';
+        letterBg = 'background: #dc3545; color: #fff;';
+        icon = ' <span style="color: #dc3545; margin-left: auto; font-weight: bold;">❌ Pilihanmu</span>';
+      }
+      
+      html += '    <div class="pilihan-btn" style="cursor: default; pointer-events: none; display: flex; align-items: center; width: 100%; ' + extraStyle + '">';
+      html += '      <span class="pilihan-huruf" style="margin-right: 12px; ' + letterBg + '">' + huruf[oIdx] + '</span>';
+      html += '      <span>' + escHtml(opt) + '</span>';
+      html += icon;
+      html += '    </div>';
+    });
+    
+    html += '  </div>';
+    html += '</div>';
+  });
+  
+  document.getElementById('review-soal-list').innerHTML = html;
+  document.getElementById('modal-review').style.display = 'flex';
+}
+
+function tutupReview() {
+  document.getElementById('modal-review').style.display = 'none';
 }
 
 function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
