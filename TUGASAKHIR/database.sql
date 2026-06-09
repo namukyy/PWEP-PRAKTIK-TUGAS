@@ -1,109 +1,206 @@
--- ============================================================
---  DigEdu – Platform Belajar UTBK
---  Database Schema + Sample Data
---  Cara import: buka phpMyAdmin → Import → pilih file ini
--- ============================================================
+-- phpMyAdmin SQL Dump
+-- version 5.2.0
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Generation Time: Jun 09, 2026 at 12:23 PM
+-- Server version: 8.0.30
+-- PHP Version: 8.1.10
 
-CREATE DATABASE IF NOT EXISTS digedu CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE digedu;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
--- ============================================================
--- TABEL 1: users
--- ============================================================
-DROP TABLE IF EXISTS forum_replies;
-DROP TABLE IF EXISTS forum_threads;
-DROP TABLE IF EXISTS tryout_results;
-DROP TABLE IF EXISTS users;
 
-CREATE TABLE users (
-  id           INT AUTO_INCREMENT PRIMARY KEY,
-  nama         VARCHAR(100) NOT NULL,
-  email        VARCHAR(100) NOT NULL UNIQUE,
-  password     VARCHAR(255) NOT NULL,
-  role         ENUM('siswa','admin') DEFAULT 'siswa',
-  created_at   DATETIME DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
--- ============================================================
--- TABEL 2: tryout_results (relasi ke users)
--- ============================================================
-CREATE TABLE tryout_results (
-  id           INT AUTO_INCREMENT PRIMARY KEY,
-  user_id      INT NOT NULL,
-  paket        VARCHAR(150) NOT NULL,
-  nilai        INT NOT NULL,
-  total_soal   INT NOT NULL,
-  benar        INT NOT NULL,
-  waktu_menit  INT NOT NULL,
-  dikerjakan   DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+--
+-- Database: `digedu`
+--
 
--- ============================================================
--- TABEL 3: forum_threads
--- ============================================================
-CREATE TABLE forum_threads (
-  id           INT AUTO_INCREMENT PRIMARY KEY,
-  user_id      INT NOT NULL,
-  judul        VARCHAR(255) NOT NULL,
-  isi          TEXT NOT NULL,
-  kategori     ENUM('Matematika','Bahasa Indonesia','Bahasa Inggris','Penalaran Umum','Umum') DEFAULT 'Umum',
-  created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- --------------------------------------------------------
 
--- ============================================================
--- TABEL 4: forum_replies (relasi ke forum_threads & users)
--- ============================================================
-CREATE TABLE forum_replies (
-  id           INT AUTO_INCREMENT PRIMARY KEY,
-  thread_id    INT NOT NULL,
-  user_id      INT NOT NULL,
-  isi          TEXT NOT NULL,
-  created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (thread_id) REFERENCES forum_threads(id) ON DELETE CASCADE,
-  FOREIGN KEY (user_id)   REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+--
+-- Table structure for table `forum_replies`
+--
 
--- ============================================================
--- SAMPLE DATA – users
--- Password semua akun: password123 (di-hash MD5)
--- Login: siswa@digedu.id / password123
--- ============================================================
-INSERT INTO users (nama, email, password, role) VALUES
-  ('Nabil Muhammad Zaqi',  'siswa@digedu.id',    MD5('password123'), 'siswa'),
-  ('Maymunah Azzahra',     'maymunah@digedu.id', MD5('password123'), 'siswa'),
-  ('Duta Firmansyah',      'duta@digedu.id',     MD5('password123'), 'siswa');
+CREATE TABLE `forum_replies` (
+  `id` int NOT NULL,
+  `thread_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `isi` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================================
--- SAMPLE DATA – tryout_results (3 data)
--- ============================================================
-INSERT INTO tryout_results (user_id, paket, nilai, total_soal, benar, waktu_menit) VALUES
-  (1, 'Tryout UTBK #1 – Penalaran Umum',   88, 5, 4, 12),
-  (1, 'Tryout UTBK #2 – Pengetahuan Umum', 76, 5, 4, 15),
-  (1, 'Tryout UTBK #3 – Matematika',        80, 5, 4, 10),
-  (2, 'Tryout UTBK #1 – Penalaran Umum',   60, 5, 3, 18),
-  (2, 'Tryout UTBK #3 – Matematika',       100, 5, 5,  8),
-  (3, 'Tryout UTBK #2 – Pengetahuan Umum', 80, 5, 4, 14);
+--
+-- Dumping data for table `forum_replies`
+--
 
--- ============================================================
--- SAMPLE DATA – forum_threads (3 data)
--- ============================================================
-INSERT INTO forum_threads (user_id, judul, isi, kategori) VALUES
-  (2, 'Cara menentukan diskriminan persamaan kuadrat?',
-     'Halo semua, aku masih bingung cara menentukan diskriminan pada persamaan kuadrat ax² + bx + c = 0. Apakah rumusnya D = b² - 4ac? Dan apa artinya jika D > 0, D = 0, dan D < 0?',
-     'Matematika'),
-  (3, 'Tips membaca cepat untuk soal Bahasa Indonesia UTBK',
-     'Bagi yang punya tips membaca cepat untuk mengerjakan soal literasi di UTBK, please share di sini! Aku sering kehabisan waktu saat mengerjakan bagian ini.',
-     'Bahasa Indonesia'),
-  (1, 'Strategi pengerjaan soal penalaran umum?',
-     'Penalaran umum itu kadang bikin pusing. Ada yang punya strategi khusus untuk mengerjakan soal-soal penalaran umum di UTBK? Terutama bagian silogisme dan analogi.',
-     'Penalaran Umum');
+INSERT INTO `forum_replies` (`id`, `thread_id`, `user_id`, `isi`, `created_at`) VALUES
+(5, 4, 4, 'gatau', '2026-06-02 08:01:33');
 
--- ============================================================
--- SAMPLE DATA – forum_replies (3 data)
--- ============================================================
-INSERT INTO forum_replies (thread_id, user_id, isi) VALUES
-  (1, 1, 'Betul, D = b² - 4ac. Kalau D > 0 berarti ada 2 akar real berbeda, D = 0 berarti 2 akar real kembar, dan D < 0 berarti tidak ada akar real.'),
-  (1, 3, 'Tambahan: nilai diskriminan juga menentukan apakah persamaan bisa difaktorkan. Kalau D adalah kuadrat sempurna, bisa difaktorkan dengan bilangan rasional.'),
-  (2, 1, 'Teknik skimming dan scanning sangat membantu. Baca judul, kalimat pertama setiap paragraf dulu, baru baca pertanyaannya.');
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `forum_threads`
+--
+
+CREATE TABLE `forum_threads` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `isi` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kategori` enum('Matematika','Bahasa Indonesia','Bahasa Inggris','Penalaran Umum','Umum') COLLATE utf8mb4_unicode_ci DEFAULT 'Umum',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `forum_threads`
+--
+
+INSERT INTO `forum_threads` (`id`, `user_id`, `judul`, `isi`, `kategori`, `created_at`) VALUES
+(4, 6, 'nanya soal kuadrat', 'ini maksud soalnya apa ya ?', 'Matematika', '2026-06-02 07:59:45');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tryout_results`
+--
+
+CREATE TABLE `tryout_results` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `paket` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nilai` int NOT NULL,
+  `total_soal` int NOT NULL,
+  `benar` int NOT NULL,
+  `waktu_menit` int NOT NULL,
+  `dikerjakan` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tryout_results`
+--
+
+INSERT INTO `tryout_results` (`id`, `user_id`, `paket`, `nilai`, `total_soal`, `benar`, `waktu_menit`, `dikerjakan`) VALUES
+(7, 4, 'Tryout UTBK #1 – Penalaran Umum', 0, 5, 0, 1, '2026-06-01 19:12:24'),
+(8, 6, 'Tryout UTBK #1 – Penalaran Umum', 0, 5, 0, 1, '2026-06-02 07:56:51'),
+(9, 6, 'Tryout UTBK #1 – Penalaran Umum', 20, 5, 1, 2, '2026-06-02 07:58:56'),
+(10, 6, 'Tryout UTBK #1 – Penalaran Umum', 20, 5, 1, 1, '2026-06-03 10:24:01'),
+(11, 6, 'Tryout UTBK #1 – Penalaran Umum', 0, 5, 0, 1, '2026-06-03 10:42:16');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int NOT NULL,
+  `nama` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('siswa','admin') COLLATE utf8mb4_unicode_ci DEFAULT 'siswa',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `nama`, `email`, `password`, `role`, `created_at`) VALUES
+(4, 'muhammad zaqi', 'muhammadzaqi@gmail.com', '$2y$10$UkIzzj9eBViK.kEY.E6/HeqCRWD/DMQf1EwjClwOoR/1zc5BOGPbO', 'siswa', '2026-06-01 19:11:59'),
+(5, 'epep', 'jumpshot@gmail.com', '$2y$10$lDcBmiMYQ37.FHH5VjEZDOKzADpWhGmVcmXBn6drpmjg1O.CsGOWa', 'siswa', '2026-06-02 07:33:36'),
+(6, 'duta', 'duta@gmail.com', '$2y$10$1WyjJ2HXkzSjr4JmzG1na.U0vGo8uhRDwhFEKlnJlCEPcUhcbMFMC', 'siswa', '2026-06-02 07:56:04');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `forum_replies`
+--
+ALTER TABLE `forum_replies`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `thread_id` (`thread_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `forum_threads`
+--
+ALTER TABLE `forum_threads`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `tryout_results`
+--
+ALTER TABLE `tryout_results`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `forum_replies`
+--
+ALTER TABLE `forum_replies`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `forum_threads`
+--
+ALTER TABLE `forum_threads`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `tryout_results`
+--
+ALTER TABLE `tryout_results`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `forum_replies`
+--
+ALTER TABLE `forum_replies`
+  ADD CONSTRAINT `forum_replies_ibfk_1` FOREIGN KEY (`thread_id`) REFERENCES `forum_threads` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `forum_replies_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `forum_threads`
+--
+ALTER TABLE `forum_threads`
+  ADD CONSTRAINT `forum_threads_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tryout_results`
+--
+ALTER TABLE `tryout_results`
+  ADD CONSTRAINT `tryout_results_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
