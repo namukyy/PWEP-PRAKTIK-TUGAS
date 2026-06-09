@@ -54,6 +54,13 @@ $soal_bank = [
     ['q'=>'Imbuhan "me-" pada kata "menulis" berfungsi sebagai...','a'=>['awalan membentuk kata benda','awalan membentuk kata kerja aktif','awalan membentuk kata sifat','akhiran'],'j'=>1],
     ['q'=>'Paragraf yang kalimat utamanya berada di akhir disebut paragraf...','a'=>['deduktif','induktif','campuran','naratif'],'j'=>1],
   ],
+  'Tryout UTBK #5 – Bahasa Inggris' => [
+    ['q'=>'Identify the synonym of the word "ubiquitous" in the context: "Smartphones have become ubiquitous in modern society."', 'a'=>['Rare', 'Everywhere', 'Expensive', 'Outdated'], 'j'=>1],
+    ['q'=>'If they had started earlier, they ___ the train.', 'a'=>['will catch', 'would catch', 'would have caught', 'caught'], 'j'=>2],
+    ['q'=>'Choose the word that best completes the sentence: "The new policy received a lot of ___ from the local residents who feared it would increase traffic."', 'a'=>['approval', 'opposition', 'indifference', 'celebration'], 'j'=>1],
+    ['q'=>'She is the teacher ___ helped me write my university application essay.', 'a'=>['which', 'who', 'whom', 'whose'], 'j'=>1],
+    ['q'=>'___ the heavy rain, the football match continued until the final whistle.', 'a'=>['Although', 'Despite', 'Because of', 'In order to'], 'j'=>1],
+  ],
 ];
 
 $tryout_list = [
@@ -61,6 +68,7 @@ $tryout_list = [
   ['judul'=>'Tryout UTBK #2 – Pengetahuan Umum', 'soal'=>5,'durasi'=>'75 menit','peserta'=>987],
   ['judul'=>'Tryout UTBK #3 – Matematika',        'soal'=>5,'durasi'=>'45 menit','peserta'=>1102],
   ['judul'=>'Tryout UTBK #4 – Bahasa Indonesia',  'soal'=>5,'durasi'=>'60 menit','peserta'=>854],
+  ['judul'=>'Tryout UTBK #5 – Bahasa Inggris',     'soal'=>5,'durasi'=>'60 menit','peserta'=>920],
 ];
 
 require_once '../includes/header.php';
